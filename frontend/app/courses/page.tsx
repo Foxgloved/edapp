@@ -3,8 +3,48 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import { Star, Clock, Users, Search, Filter } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const mockCourses = [
+  {
+    id: '7',
+    title: 'Phishing and Scam Alert Training - Food Service',
+    category: 'Cybersecurity',
+    level: 'Beginner',
+    instructor: 'Security Experts',
+    duration: 12,
+    enrolled: 0,
+    rating: 4.9,
+    progress: 0,
+    thumbnail: '🎣',
+    featured: true,
+  },
+  {
+    id: '6',
+    title: 'NIST Cybersecurity Framework 2.0 Training',
+    category: 'Cybersecurity',
+    level: 'Intermediate',
+    instructor: 'Security Experts',
+    duration: 44,
+    enrolled: 0,
+    rating: 4.9,
+    progress: 0,
+    thumbnail: '🔐',
+    featured: true,
+  },
+  {
+    id: '5',
+    title: 'OSHA Restaurant Employee Training - Missouri',
+    category: 'Safety & Compliance',
+    level: 'Beginner',
+    instructor: 'Safety Department',
+    duration: 40,
+    enrolled: 0,
+    rating: 4.9,
+    progress: 0,
+    thumbnail: '🏥',
+    featured: true,
+  },
   {
     id: '1',
     title: 'Advanced React Development',
@@ -54,7 +94,7 @@ const mockCourses = [
     thumbnail: '☁️',
   },
   {
-    id: '5',
+    id: '6',
     title: 'Mobile App Development',
     category: 'Mobile',
     level: 'Intermediate',
@@ -66,7 +106,7 @@ const mockCourses = [
     thumbnail: '📱',
   },
   {
-    id: '6',
+    id: '7',
     title: 'Machine Learning Basics',
     category: 'AI/ML',
     level: 'Beginner',
@@ -79,7 +119,7 @@ const mockCourses = [
   },
 ];
 
-const categories = ['All', 'Frontend', 'Backend', 'Design', 'Data Science', 'Cloud', 'Mobile', 'AI/ML'];
+const categories = ['All', 'Cybersecurity', 'Safety & Compliance', 'Frontend', 'Backend', 'Design', 'Data Science', 'Cloud', 'Mobile', 'AI/ML'];
 const levels = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];
 
 export default function CoursesPage() {
@@ -143,9 +183,10 @@ export default function CoursesPage() {
         {/* Courses Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {mockCourses.map((course) => (
-            <div
+            <Link
               key={course.id}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+              href={`/courses/${course.id}`}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow block"
             >
               <div className="h-40 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-6xl">
                 {course.thumbnail}
@@ -212,7 +253,7 @@ export default function CoursesPage() {
                   </button>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

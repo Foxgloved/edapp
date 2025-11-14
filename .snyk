@@ -1,0 +1,13 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+
+# Configuration for the entire project
+language-settings:
+  python: 3.10
+
+# Ignore specific vulnerabilities (add as needed)
+ignore: {}
+
+# Patches to apply (automatically managed by Snyk)
+patch: {}
+

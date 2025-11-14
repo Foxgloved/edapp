@@ -79,6 +79,134 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {/* Featured Courses */}
+        <div className="mb-8 space-y-4">
+          {/* NIST CSF Course Banner */}
+          <Link 
+            href="/courses/6"
+            className="block bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-700 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+          >
+            <div className="p-8 flex flex-col md:flex-row items-center justify-between">
+              <div className="flex items-center gap-6 mb-6 md:mb-0">
+                <div className="text-7xl">🔐</div>
+                <div className="text-white">
+                  <div className="inline-block px-3 py-1 bg-yellow-500/30 border border-yellow-300/50 rounded-full text-xs font-semibold mb-3">
+                    🔥 TRENDING NOW
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">
+                    NIST Cybersecurity Framework 2.0 Training
+                  </h2>
+                  <p className="text-purple-100 mb-3 max-w-2xl">
+                    Master the latest NIST CSF 2.0 with all six core functions: Govern, Identify, Protect, Detect, Respond, and Recover. Essential for cybersecurity professionals.
+                  </p>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="h-4 w-4" />
+                      30 Lessons
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      44 Hours
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Award className="h-4 w-4" />
+                      Professional Certification
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="px-8 py-3 bg-white text-indigo-600 rounded-lg font-semibold flex items-center gap-2 group-hover:bg-purple-50 transition-colors">
+                  Start Course
+                  <ArrowRight className="h-5 w-5" />
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Phishing and Scam Alert Training Banner */}
+          <Link 
+            href="/courses/7"
+            className="block bg-gradient-to-br from-orange-500 via-red-600 to-pink-600 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+          >
+            <div className="p-6 flex flex-col md:flex-row items-center justify-between">
+              <div className="flex items-center gap-6 mb-4 md:mb-0">
+                <div className="text-6xl">🎣</div>
+                <div className="text-white">
+                  <div className="inline-block px-3 py-1 bg-yellow-500/30 border border-yellow-300/50 rounded-full text-xs font-semibold mb-2">
+                    ESSENTIAL TRAINING
+                  </div>
+                  <h3 className="text-xl font-bold mb-1">
+                    Phishing and Scam Alert Training - Food Service
+                  </h3>
+                  <p className="text-orange-100 text-sm mb-2 max-w-2xl">
+                    Protect your restaurant from cyber threats. Learn to recognize phishing, scams, and social engineering attacks targeting food service businesses.
+                  </p>
+                  <div className="flex items-center gap-4 text-xs">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="h-3 w-3" />
+                      26 Lessons
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      12 Hours
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Target className="h-3 w-3" />
+                      Beginner Friendly
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="px-6 py-2 bg-white text-orange-600 rounded-lg font-semibold text-sm flex items-center gap-2 group-hover:bg-orange-50 transition-colors">
+                  Start Course
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* OSHA Course Banner */}
+          <Link 
+            href="/courses/5"
+            className="block bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+          >
+            <div className="p-6 flex flex-col md:flex-row items-center justify-between">
+              <div className="flex items-center gap-6 mb-4 md:mb-0">
+                <div className="text-6xl">🏥</div>
+                <div className="text-white">
+                  <div className="inline-block px-3 py-1 bg-green-500/30 border border-green-300/50 rounded-full text-xs font-semibold mb-2">
+                    NEW COURSE
+                  </div>
+                  <h3 className="text-xl font-bold mb-1">
+                    OSHA Restaurant Employee Training - Missouri
+                  </h3>
+                  <p className="text-blue-100 text-sm mb-2 max-w-2xl">
+                    Complete OSHA compliance training covering workplace safety, food safety, and certifications.
+                  </p>
+                  <div className="flex items-center gap-4 text-xs">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="h-3 w-3" />
+                      24 Lessons
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      40 Hours
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="px-6 py-2 bg-white text-blue-600 rounded-lg font-semibold text-sm flex items-center gap-2 group-hover:bg-blue-50 transition-colors">
+                  View Course
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
