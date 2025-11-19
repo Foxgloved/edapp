@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BookOpen, Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,6 +14,8 @@ export default function LoginPage() {
     e.preventDefault();
     // Handle login logic here
     console.log('Login:', { email, password });
+    // For demo purposes, redirect to dashboard
+    router.push('/dashboard');
   };
 
   return (
@@ -120,11 +124,35 @@ export default function LoginPage() {
           </a>
         </p>
 
-        {/* Demo Credentials */}
+        {/* Demo Credentials - Quick Login */}
         <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
-          <p className="text-sm text-blue-800 font-medium mb-2">Demo Credentials:</p>
-          <p className="text-sm text-blue-700">Email: demo@company.com</p>
-          <p className="text-sm text-blue-700">Password: demo123</p>
+          <p className="text-sm text-blue-800 font-medium mb-3">Quick Login (Testing):</p>
+          <div className="space-y-2">
+            <Link
+              href="/dashboard"
+              className="block w-full py-2 px-4 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors text-center"
+            >
+              <div className="text-sm font-semibold text-blue-900">👨‍🎓 Login as Student</div>
+              <div className="text-xs text-blue-600">john.doe@edapp.com</div>
+            </Link>
+            <Link
+              href="/dashboard"
+              className="block w-full py-2 px-4 bg-white border border-purple-300 rounded-lg hover:bg-purple-100 transition-colors text-center"
+            >
+              <div className="text-sm font-semibold text-purple-900">👨‍🏫 Login as Instructor</div>
+              <div className="text-xs text-purple-600">instructor@edapp.com</div>
+            </Link>
+            <Link
+              href="/dashboard"
+              className="block w-full py-2 px-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-center"
+            >
+              <div className="text-sm font-semibold text-gray-900">👨‍💼 Login as Admin</div>
+              <div className="text-xs text-gray-600">admin@edapp.com</div>
+            </Link>
+          </div>
+          <p className="text-xs text-blue-600 mt-3 text-center">
+            All demo passwords: admin123, instructor123, student123
+          </p>
         </div>
       </div>
     </div>

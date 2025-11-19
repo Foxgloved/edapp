@@ -94,7 +94,7 @@ const mockCourses = [
     thumbnail: '☁️',
   },
   {
-    id: '6',
+    id: '8',
     title: 'Mobile App Development',
     category: 'Mobile',
     level: 'Intermediate',
@@ -106,7 +106,7 @@ const mockCourses = [
     thumbnail: '📱',
   },
   {
-    id: '7',
+    id: '9',
     title: 'Machine Learning Basics',
     category: 'AI/ML',
     level: 'Beginner',

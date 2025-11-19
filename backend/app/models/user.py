@@ -18,6 +18,7 @@ class User(Base):
     name = Column(String, nullable=False)
     role = Column(Enum(UserRole), default=UserRole.STUDENT)
     avatar = Column(String, nullable=True)
+    about_me = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     

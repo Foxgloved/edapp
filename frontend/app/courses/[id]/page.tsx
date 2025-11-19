@@ -1109,11 +1109,19 @@ export default function CourseDetailPage() {
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{totalLessons} comprehensive video lessons</span>
+                    <span className="text-sm text-gray-700">Self-paced learning - study anytime</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Downloadable training materials</span>
+                    <span className="text-sm text-gray-700">{totalLessons} on-demand video lessons</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">24/7 access to all materials</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Downloadable resources</span>
                   </li>
                   {course.id === '5' && (
                     <li className="flex items-start gap-3">

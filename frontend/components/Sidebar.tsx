@@ -6,7 +6,6 @@ import {
   LayoutDashboard, 
   BookOpen, 
   Calendar, 
-  FileText, 
   Settings, 
   Trophy,
   User
@@ -17,7 +16,6 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'My Courses', href: '/courses', icon: BookOpen },
   { name: 'Schedule', href: '/schedule', icon: Calendar },
-  { name: 'Homework', href: '/homework', icon: FileText },
   { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },

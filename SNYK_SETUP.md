@@ -285,3 +285,5 @@ For this project, the **free tier is sufficient** for:
 **Snyk Version:** Latest
 **Project:** Employee Education Platform
 
+
+

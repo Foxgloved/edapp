@@ -613,3 +613,5 @@ I acknowledge that I have received, reviewed, and understand this OSHA Restauran
 
 *This training plan is designed to meet current OSHA and Missouri state requirements as of November 2025. Regulations may change, and it is the responsibility of the employer to stay informed of updates. Consult with legal counsel and safety professionals to ensure full compliance with all applicable regulations.*
 
+
+

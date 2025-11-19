@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { 
   TrendingUp, 
@@ -28,7 +29,6 @@ const mockCourses = [
     progress: 65,
     instructor: 'Sarah Johnson',
     nextLesson: 'React Hooks Deep Dive',
-    dueDate: '2025-11-15',
   },
   {
     id: '2',
@@ -36,7 +36,6 @@ const mockCourses = [
     progress: 45,
     instructor: 'Michael Chen',
     nextLesson: 'Pandas DataFrames',
-    dueDate: '2025-11-18',
   },
   {
     id: '3',
@@ -44,28 +43,59 @@ const mockCourses = [
     progress: 80,
     instructor: 'Emma Wilson',
     nextLesson: 'User Testing Methods',
-    dueDate: '2025-11-20',
   },
 ];
 
-const upcomingSchedule = [
+const learningFeatures = [
   {
     id: '1',
-    course: 'Advanced React Development',
-    type: 'Live Session',
-    time: '10:00 AM',
-    date: 'Today',
+    icon: '🎯',
+    title: 'Self-Paced Learning',
+    description: 'Learn at your own pace, anytime, anywhere',
   },
   {
     id: '2',
-    course: 'Python for Data Science',
-    type: 'Assignment Due',
-    time: '11:59 PM',
-    date: 'Tomorrow',
+    icon: '📚',
+    title: '24/7 Access',
+    description: 'All course materials available on-demand',
+  },
+  {
+    id: '3',
+    icon: '🏆',
+    title: 'Instant Certificates',
+    description: 'Earn certificates upon course completion',
   },
 ];
 
 export default function DashboardPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <DashboardLayout>
+        <div className="p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back, John!
+            </h1>
+            <p className="text-gray-600">
+              You&apos;re making great progress. Keep up the excellent work!
+            </p>
+          </div>
+          <div className="animate-pulse space-y-4">
+            <div className="h-40 bg-gray-200 rounded-2xl"></div>
+            <div className="h-40 bg-gray-200 rounded-2xl"></div>
+            <div className="h-40 bg-gray-200 rounded-2xl"></div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div className="p-8">
@@ -75,7 +105,7 @@ export default function DashboardPage() {
             Welcome back, John! 👋
           </h1>
           <p className="text-gray-600">
-            You're making great progress. Keep up the excellent work!
+            You&apos;re making great progress. Keep up the excellent work!
           </p>
         </div>
 
@@ -97,9 +127,12 @@ export default function DashboardPage() {
                     NIST Cybersecurity Framework 2.0 Training
                   </h2>
                   <p className="text-purple-100 mb-3 max-w-2xl">
-                    Master the latest NIST CSF 2.0 with all six core functions: Govern, Identify, Protect, Detect, Respond, and Recover. Essential for cybersecurity professionals.
+                    Master the latest NIST CSF 2.0 with all six core functions: Govern, Identify, Protect, Detect, Respond, and Recover. Self-paced, on-demand learning.
                   </p>
-                  <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-4 text-sm flex-wrap">
+                    <span className="flex items-center gap-1 bg-white/20 px-2 py-1 rounded">
+                      🎯 Self-Paced
+                    </span>
                     <span className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4" />
                       30 Lessons
@@ -110,7 +143,7 @@ export default function DashboardPage() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Award className="h-4 w-4" />
-                      Professional Certification
+                      Certificate
                     </span>
                   </div>
                 </div>
@@ -140,9 +173,12 @@ export default function DashboardPage() {
                     Phishing and Scam Alert Training - Food Service
                   </h3>
                   <p className="text-orange-100 text-sm mb-2 max-w-2xl">
-                    Protect your restaurant from cyber threats. Learn to recognize phishing, scams, and social engineering attacks targeting food service businesses.
+                    Protect your restaurant from cyber threats. Self-paced training on phishing, scams, and social engineering attacks. Available 24/7.
                   </p>
-                  <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-4 text-xs flex-wrap">
+                    <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded">
+                      🎯 On-Demand
+                    </span>
                     <span className="flex items-center gap-1">
                       <BookOpen className="h-3 w-3" />
                       26 Lessons
@@ -153,7 +189,7 @@ export default function DashboardPage() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Target className="h-3 w-3" />
-                      Beginner Friendly
+                      Beginner
                     </span>
                   </div>
                 </div>
@@ -183,9 +219,12 @@ export default function DashboardPage() {
                     OSHA Restaurant Employee Training - Missouri
                   </h3>
                   <p className="text-blue-100 text-sm mb-2 max-w-2xl">
-                    Complete OSHA compliance training covering workplace safety, food safety, and certifications.
+                    Complete OSHA compliance training at your own pace. Workplace safety, food safety, and certifications available 24/7.
                   </p>
-                  <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-4 text-xs flex-wrap">
+                    <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded">
+                      🎯 Self-Paced
+                    </span>
                     <span className="flex items-center gap-1">
                       <BookOpen className="h-3 w-3" />
                       24 Lessons
@@ -306,10 +345,7 @@ export default function DashboardPage() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      Due: {course.dueDate}
-                    </span>
+                  <div className="flex items-center justify-end">
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                       Continue
                     </button>
@@ -363,39 +399,34 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            {/* Upcoming Schedule */}
+            {/* Learning Features */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Upcoming Schedule
+                Learn On Your Schedule
               </h3>
               <div className="space-y-4">
-                {upcomingSchedule.map((item) => (
+                {learningFeatures.map((feature) => (
                   <div
-                    key={item.id}
-                    className="p-4 bg-gray-50 rounded-lg"
+                    key={feature.id}
+                    className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg"
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 text-sm mb-1">
-                          {item.course}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {item.type}
-                        </div>
+                    <div className="text-2xl">{feature.icon}</div>
+                    <div>
+                      <div className="font-semibold text-gray-900 text-sm mb-1">
+                        {feature.title}
                       </div>
-                    </div>
-                    <div className="flex items-center text-xs text-gray-500">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {item.date} at {item.time}
+                      <div className="text-xs text-gray-600">
+                        {feature.description}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
               <Link
-                href="/schedule"
+                href="/courses"
                 className="block mt-4 text-center text-sm text-blue-600 hover:text-blue-700 font-medium"
               >
-                View full schedule
+                Browse all courses →
               </Link>
             </div>
 

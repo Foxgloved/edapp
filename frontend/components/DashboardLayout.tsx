@@ -2,6 +2,7 @@
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import UserSwitcher from './UserSwitcher';
 
 export default function DashboardLayout({
   children,
@@ -17,6 +18,8 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      {/* User Switcher for Demo/Testing */}
+      <UserSwitcher />
     </div>
   );
 }

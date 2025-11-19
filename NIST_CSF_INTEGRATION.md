@@ -399,3 +399,5 @@ The NIST Cybersecurity Framework 2.0 course has been successfully integrated int
 
 Your edapp platform now offers world-class training in both workplace safety and cybersecurity! 🚀
 
+
+
