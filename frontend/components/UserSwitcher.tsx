@@ -1,16 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Users, X, CheckCircle } from 'lucide-react';
+import { Users, X } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 
 export default function UserSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const [justSwitched, setJustSwitched] = useState(false);
   const { loginAsUser } = useAuth();
-  const router = useRouter();
 
   const demoUsers = [
     {
@@ -50,16 +47,13 @@ export default function UserSwitcher() {
       role: demoUser.role,
     };
     
+    setIsOpen(false);
     loginAsUser(user);
-    setJustSwitched(true);
     
-    // Show confirmation briefly, then close
+    // Auto-reload page to apply changes
     setTimeout(() => {
-      setJustSwitched(false);
-      setIsOpen(false);
-      router.push('/dashboard');
-      router.refresh();
-    }, 1500);
+      window.location.href = '/dashboard';
+    }, 200);
   };
 
   return (
@@ -93,17 +87,6 @@ export default function UserSwitcher() {
               <h3 className="font-bold text-lg">Switch User</h3>
               <p className="text-sm text-blue-100">Quick login for testing</p>
             </div>
-
-            {/* Confirmation Message */}
-            {justSwitched && (
-              <div className="p-4 bg-green-50 border-b border-green-200 flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-green-900">User Switched!</p>
-                  <p className="text-xs text-green-700">Click "Refresh UI" below to see changes</p>
-                </div>
-              </div>
-            )}
 
             {/* User List */}
             <div className="p-4 space-y-2 max-h-96 overflow-y-auto">
@@ -141,14 +124,6 @@ export default function UserSwitcher() {
 
             {/* Footer */}
             <div className="p-4 bg-gray-50 border-t border-gray-200">
-              <button
-                onClick={() => {
-                  window.location.reload();
-                }}
-                className="w-full mb-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm"
-              >
-                🔄 Refresh UI to Apply Changes
-              </button>
               <p className="text-xs text-gray-600 text-center mb-2">
                 🔐 All passwords: admin123, instructor123, student123
               </p>
