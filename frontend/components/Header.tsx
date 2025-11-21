@@ -3,8 +3,10 @@
 import { Search, Bell, LogOut, User, Settings, ChevronDown, Award, BookOpen, CheckCircle, X } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth, getUserInitials } from '@/contexts/AuthContext';
 
 export default function Header() {
+  const { user, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notificationsList, setNotificationsList] = useState([
@@ -177,11 +179,11 @@ export default function Header() {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                  JD
+                  {user ? getUserInitials(user.name) : 'U'}
                 </div>
                 <div className="hidden md:block">
-                  <div className="text-sm font-semibold text-gray-900">John Doe</div>
-                  <div className="text-xs text-gray-500">Student</div>
+                  <div className="text-sm font-semibold text-gray-900">{user?.name || 'Guest'}</div>
+                  <div className="text-xs text-gray-500 capitalize">{user?.role || 'User'}</div>
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </button>
@@ -206,18 +208,16 @@ export default function Header() {
                     Edit Profile
                   </Link>
                   <div className="border-t border-gray-200 my-2"></div>
-                  <Link
-                    href="/login"
+                  <button
                     onClick={() => {
                       setShowProfileMenu(false);
-                      // Clear any session data
-                      localStorage.clear();
+                      logout();
                     }}
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full"
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign Out
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>

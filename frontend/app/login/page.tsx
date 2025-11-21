@@ -4,18 +4,57 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BookOpen, Mail, Lock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, loginAsUser } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login:', { email, password });
-    // For demo purposes, redirect to dashboard
-    router.push('/dashboard');
+    setError('');
+    setIsLoading(true);
+
+    const success = await login(email, password);
+    
+    if (!success) {
+      setError('Invalid email or password. Try: john.doe@edapp.com / student123');
+    }
+    
+    setIsLoading(false);
+  };
+
+  const handleQuickLogin = (userEmail: string, role: string) => {
+    const demoUsers = {
+      'john.doe@edapp.com': {
+        id: '1',
+        name: 'John Doe',
+        email: 'john.doe@edapp.com',
+        role: 'student' as const,
+      },
+      'instructor@edapp.com': {
+        id: '2',
+        name: 'Security Experts',
+        email: 'instructor@edapp.com',
+        role: 'instructor' as const,
+      },
+      'admin@edapp.com': {
+        id: '3',
+        name: 'Admin User',
+        email: 'admin@edapp.com',
+        role: 'admin' as const,
+      },
+    };
+
+    const user = demoUsers[userEmail as keyof typeof demoUsers];
+    if (user) {
+      loginAsUser(user);
+      router.push('/dashboard');
+    }
   };
 
   return (
@@ -87,11 +126,18 @@ export default function LoginPage() {
               </a>
             </div>
 
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              disabled={isLoading}
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
@@ -128,27 +174,27 @@ export default function LoginPage() {
         <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
           <p className="text-sm text-blue-800 font-medium mb-3">Quick Login (Testing):</p>
           <div className="space-y-2">
-            <Link
-              href="/dashboard"
+            <button
+              onClick={() => handleQuickLogin('john.doe@edapp.com', 'student')}
               className="block w-full py-2 px-4 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors text-center"
             >
               <div className="text-sm font-semibold text-blue-900">👨‍🎓 Login as Student</div>
               <div className="text-xs text-blue-600">john.doe@edapp.com</div>
-            </Link>
-            <Link
-              href="/dashboard"
+            </button>
+            <button
+              onClick={() => handleQuickLogin('instructor@edapp.com', 'instructor')}
               className="block w-full py-2 px-4 bg-white border border-purple-300 rounded-lg hover:bg-purple-100 transition-colors text-center"
             >
               <div className="text-sm font-semibold text-purple-900">👨‍🏫 Login as Instructor</div>
               <div className="text-xs text-purple-600">instructor@edapp.com</div>
-            </Link>
-            <Link
-              href="/dashboard"
+            </button>
+            <button
+              onClick={() => handleQuickLogin('admin@edapp.com', 'admin')}
               className="block w-full py-2 px-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-center"
             >
               <div className="text-sm font-semibold text-gray-900">👨‍💼 Login as Admin</div>
               <div className="text-xs text-gray-600">admin@edapp.com</div>
-            </Link>
+            </button>
           </div>
           <p className="text-xs text-blue-600 mt-3 text-center">
             All demo passwords: admin123, instructor123, student123

@@ -14,16 +14,19 @@ import {
   GraduationCap
 } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth, getUserInitials } from '@/contexts/AuthContext';
 
 export default function ProfilePage() {
+  const { user } = useAuth();
+  
   const profileData = {
-    fullName: 'John Doe',
-    email: 'john.doe@company.com',
-    role: 'Student',
+    fullName: user?.name || 'Guest User',
+    email: user?.email || 'guest@edapp.com',
+    role: user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Student',
     department: 'Technology Department',
     location: 'New York, USA',
     joinDate: 'January 2024',
-    aboutMe: 'Passionate about continuous learning and professional development. Currently focusing on cybersecurity and compliance training to advance my career in the food service industry.',
+    aboutMe: user?.aboutMe || 'No bio added yet. Click Edit Profile to add information about yourself.',
     stats: {
       coursesCompleted: 8,
       coursesInProgress: 4,

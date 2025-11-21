@@ -3,36 +3,55 @@
 import { useState } from 'react';
 import { Users, X } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function UserSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
+  const { loginAsUser } = useAuth();
+  const router = useRouter();
 
   const demoUsers = [
     {
+      id: '1',
       name: 'John Doe',
       email: 'john.doe@edapp.com',
-      role: 'Student',
+      role: 'student' as const,
+      displayRole: 'Student',
       icon: '👨‍🎓',
       color: 'blue',
-      href: '/dashboard'
     },
     {
+      id: '2',
       name: 'Security Experts',
       email: 'instructor@edapp.com',
-      role: 'Instructor',
+      role: 'instructor' as const,
+      displayRole: 'Instructor',
       icon: '👨‍🏫',
       color: 'purple',
-      href: '/dashboard'
     },
     {
+      id: '3',
       name: 'Admin User',
       email: 'admin@edapp.com',
-      role: 'Admin',
+      role: 'admin' as const,
+      displayRole: 'Admin',
       icon: '👨‍💼',
       color: 'gray',
-      href: '/dashboard'
     },
   ];
+
+  const handleUserSwitch = (demoUser: typeof demoUsers[0]) => {
+    const user = {
+      id: demoUser.id,
+      name: demoUser.name,
+      email: demoUser.email,
+      role: demoUser.role,
+    };
+    loginAsUser(user);
+    setIsOpen(false);
+    router.push('/dashboard');
+  };
 
   return (
     <>
@@ -68,40 +87,35 @@ export default function UserSwitcher() {
 
             {/* User List */}
             <div className="p-4 space-y-2 max-h-96 overflow-y-auto">
-              {demoUsers.map((user) => (
-                <Link
-                  key={user.email}
-                  href={user.href}
-                  onClick={() => {
-                    setIsOpen(false);
-                    // Store user in localStorage for demo
-                    localStorage.setItem('demoUser', JSON.stringify(user));
-                  }}
-                  className={`block p-4 rounded-lg border-2 hover:shadow-md transition-all ${
-                    user.color === 'blue'
+              {demoUsers.map((demoUser) => (
+                <button
+                  key={demoUser.email}
+                  onClick={() => handleUserSwitch(demoUser)}
+                  className={`w-full text-left p-4 rounded-lg border-2 hover:shadow-md transition-all ${
+                    demoUser.color === 'blue'
                       ? 'border-blue-200 hover:border-blue-400 hover:bg-blue-50'
-                      : user.color === 'purple'
+                      : demoUser.color === 'purple'
                       ? 'border-purple-200 hover:border-purple-400 hover:bg-purple-50'
                       : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="text-3xl">{user.icon}</div>
+                    <div className="text-3xl">{demoUser.icon}</div>
                     <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{user.name}</div>
-                      <div className="text-xs text-gray-600">{user.email}</div>
+                      <div className="font-semibold text-gray-900">{demoUser.name}</div>
+                      <div className="text-xs text-gray-600">{demoUser.email}</div>
                       <div className={`text-xs font-medium mt-1 ${
-                        user.color === 'blue'
+                        demoUser.color === 'blue'
                           ? 'text-blue-600'
-                          : user.color === 'purple'
+                          : demoUser.color === 'purple'
                           ? 'text-purple-600'
                           : 'text-gray-600'
                       }`}>
-                        {user.role}
+                        {demoUser.displayRole}
                       </div>
                     </div>
                   </div>
-                </Link>
+                </button>
               ))}
             </div>
 

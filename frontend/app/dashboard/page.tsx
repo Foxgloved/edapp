@@ -12,6 +12,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 const mockStats = {
   totalCourses: 12,
@@ -68,6 +69,7 @@ const learningFeatures = [
 ];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export default function DashboardPage() {
         <div className="p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome back, John!
+              Welcome back!
             </h1>
             <p className="text-gray-600">
               You&apos;re making great progress. Keep up the excellent work!
@@ -96,13 +98,15 @@ export default function DashboardPage() {
     );
   }
 
+  const firstName = user?.name.split(' ')[0] || 'there';
+
   return (
     <DashboardLayout>
       <div className="p-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, John! 👋
+            Welcome back, {firstName}! 👋
           </h1>
           <p className="text-gray-600">
             You&apos;re making great progress. Keep up the excellent work!
