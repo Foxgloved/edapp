@@ -1,58 +1,92 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Bell, Lock, User, Palette, Globe, Shield } from 'lucide-react';
+import { Bell, Lock, User, Palette, Globe, Shield, Check } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function SettingsPage() {
+  // Get theme context
+  const { theme, language, setTheme, setLanguage } = useTheme();
+  
+  // Local state for tracking pending changes
+  const [pendingTheme, setPendingTheme] = useState(theme);
+  const [pendingLanguage, setPendingLanguage] = useState(language);
+  const [showAppearanceSuccess, setShowAppearanceSuccess] = useState(false);
+
+  // Update pending values when theme context changes
+  useEffect(() => {
+    setPendingTheme(theme);
+    setPendingLanguage(language);
+  }, [theme, language]);
+
+  // Check if appearance settings have changed
+  const hasAppearanceChanges = pendingTheme !== theme || pendingLanguage !== language;
+
+  // Handle appearance settings save
+  const handleSaveAppearance = () => {
+    setTheme(pendingTheme);
+    setLanguage(pendingLanguage);
+    setShowAppearanceSuccess(true);
+    
+    // Hide success message after 3 seconds
+    setTimeout(() => {
+      setShowAppearanceSuccess(false);
+    }, 3000);
+    
+    // Here you would typically make an API call to save the settings
+    console.log('Saving appearance settings:', { theme: pendingTheme, language: pendingLanguage });
+  };
+
   return (
     <DashboardLayout>
       <div className="p-8 max-w-4xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-          <p className="text-gray-600">Manage your account preferences and settings</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Settings</h1>
+          <p className="text-gray-600 dark:text-gray-400">Manage your account preferences and settings</p>
         </div>
 
         <div className="space-y-6">
           {/* Profile Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <User className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Profile Settings</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Profile Settings</h2>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Display Name
                 </label>
                 <input
                   type="text"
                   defaultValue="John Doe"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Email
                 </label>
                 <input
                   type="email"
                   defaultValue="john.doe@company.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Bio
                 </label>
                 <textarea
                   rows={3}
                   defaultValue="Passionate about learning new technologies..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
@@ -63,42 +97,42 @@ export default function SettingsPage() {
           </div>
 
           {/* Security Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Lock className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                <Lock className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Security</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Security</h2>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Current Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   New Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Confirm New Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
               
@@ -109,52 +143,56 @@ export default function SettingsPage() {
           </div>
 
           {/* Notification Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Bell className="h-5 w-5 text-purple-600" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                <Bell className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Notifications</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Notifications</h2>
             </div>
             
             <div className="space-y-4">
               <label className="flex items-center justify-between">
-                <span className="text-gray-700">Email notifications for new courses</span>
+                <span className="text-gray-700 dark:text-gray-300">Email notifications for new courses</span>
                 <input type="checkbox" defaultChecked className="w-5 h-5 text-blue-600" />
               </label>
               
               <label className="flex items-center justify-between">
-                <span className="text-gray-700">Assignment deadline reminders</span>
+                <span className="text-gray-700 dark:text-gray-300">Assignment deadline reminders</span>
                 <input type="checkbox" defaultChecked className="w-5 h-5 text-blue-600" />
               </label>
               
               <label className="flex items-center justify-between">
-                <span className="text-gray-700">Weekly progress summary</span>
+                <span className="text-gray-700 dark:text-gray-300">Weekly progress summary</span>
                 <input type="checkbox" className="w-5 h-5 text-blue-600" />
               </label>
               
               <label className="flex items-center justify-between">
-                <span className="text-gray-700">Achievement notifications</span>
+                <span className="text-gray-700 dark:text-gray-300">Achievement notifications</span>
                 <input type="checkbox" defaultChecked className="w-5 h-5 text-blue-600" />
               </label>
             </div>
           </div>
 
           {/* Appearance Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Palette className="h-5 w-5 text-yellow-600" />
+              <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                <Palette className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Appearance</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Appearance</h2>
             </div>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Theme
                 </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select 
+                  value={pendingTheme}
+                  onChange={(e) => setPendingTheme(e.target.value as any)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                >
                   <option>Light</option>
                   <option>Dark</option>
                   <option>System</option>
@@ -162,15 +200,46 @@ export default function SettingsPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Language
                 </label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <select 
+                  value={pendingLanguage}
+                  onChange={(e) => setPendingLanguage(e.target.value as any)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                >
                   <option>English</option>
                   <option>Spanish</option>
                   <option>French</option>
                   <option>German</option>
                 </select>
+              </div>
+
+              {/* Confirm Changes Button */}
+              <div className="flex items-center gap-3 pt-2">
+                <button 
+                  onClick={handleSaveAppearance}
+                  disabled={!hasAppearanceChanges}
+                  className={`px-6 py-2 rounded-lg transition-all flex items-center gap-2 ${
+                    hasAppearanceChanges
+                      ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                      : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {showAppearanceSuccess ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Saved!
+                    </>
+                  ) : (
+                    'Confirm Changes'
+                  )}
+                </button>
+                {hasAppearanceChanges && !showAppearanceSuccess && (
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    You have unsaved changes
+                  </span>
+                )}
               </div>
             </div>
           </div>

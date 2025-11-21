@@ -3,6 +3,7 @@ from .course import Course, Enrollment, Lesson
 from .assignment import Assignment, Submission
 from .progress import Progress
 from .schedule import Schedule
+from .certificate import Certificate
 
 __all__ = [
     "User",
@@ -13,4 +14,5 @@ __all__ = [
     "Submission",
     "Progress",
     "Schedule",
+    "Certificate",
 ]

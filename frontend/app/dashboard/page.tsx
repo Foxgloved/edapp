@@ -13,39 +13,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-
-const mockStats = {
-  totalCourses: 12,
-  inProgress: 4,
-  completed: 8,
-  totalHours: 156,
-  currentStreak: 7,
-  monthlyActivity: 78,
-};
-
-const mockCourses = [
-  {
-    id: '1',
-    title: 'Advanced React Development',
-    progress: 65,
-    instructor: 'Sarah Johnson',
-    nextLesson: 'React Hooks Deep Dive',
-  },
-  {
-    id: '2',
-    title: 'Python for Data Science',
-    progress: 45,
-    instructor: 'Michael Chen',
-    nextLesson: 'Pandas DataFrames',
-  },
-  {
-    id: '3',
-    title: 'UI/UX Design Fundamentals',
-    progress: 80,
-    instructor: 'Emma Wilson',
-    nextLesson: 'User Testing Methods',
-  },
-];
+import { useUserStats, useUserCourses } from '@/hooks/useUserData';
 
 const learningFeatures = [
   {
@@ -70,6 +38,8 @@ const learningFeatures = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { stats } = useUserStats();
+  const { inProgress: enrolledCourses } = useUserCourses();
   const [mounted, setMounted] = useState(false);
   const [welcomeName, setWelcomeName] = useState('there');
 
@@ -268,7 +238,7 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500">Total</span>
             </div>
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {mockStats.totalCourses}
+              {stats.totalCourses}
             </div>
             <div className="text-sm text-gray-600">Enrolled Courses</div>
           </div>
@@ -281,7 +251,7 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500">Active</span>
             </div>
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {mockStats.inProgress}
+              {stats.inProgress}
             </div>
             <div className="text-sm text-gray-600">In Progress</div>
           </div>
@@ -294,7 +264,7 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500">Done</span>
             </div>
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {mockStats.completed}
+              {stats.completed}
             </div>
             <div className="text-sm text-gray-600">Completed</div>
           </div>
@@ -307,7 +277,7 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500">Streak</span>
             </div>
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {mockStats.currentStreak}
+              {stats.currentStreak}
             </div>
             <div className="text-sm text-gray-600">Days Active</div>
           </div>
@@ -325,7 +295,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="space-y-4">
-              {mockCourses.map((course) => (
+              {enrolledCourses.map((course) => (
                 <div
                   key={course.id}
                   className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
@@ -394,14 +364,14 @@ export default function DashboardPage() {
                       strokeWidth="8"
                       fill="none"
                       strokeDasharray={`${2 * Math.PI * 56}`}
-                      strokeDashoffset={`${2 * Math.PI * 56 * (1 - mockStats.monthlyActivity / 100)}`}
+                      strokeDashoffset={`${2 * Math.PI * 56 * (1 - stats.monthlyActivity / 100)}`}
                       className="text-blue-600"
                       strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-3xl font-bold text-gray-900">
-                      {mockStats.monthlyActivity}%
+                      {stats.monthlyActivity}%
                     </span>
                   </div>
                 </div>
@@ -426,8 +396,8 @@ export default function DashboardPage() {
                     <div>
                       <div className="font-semibold text-gray-900 text-sm mb-1">
                         {feature.title}
-                      </div>
-                      <div className="text-xs text-gray-600">
+                        </div>
+                        <div className="text-xs text-gray-600">
                         {feature.description}
                       </div>
                     </div>

@@ -1,14 +1,23 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
+from pydantic import BaseModel
 
 from ..core.database import get_db
 from ..models.user import User
 from ..models.course import Course, Enrollment
+from ..models.certificate import Certificate
 from ..schemas.course import CourseCreate, CourseResponse, EnrollmentCreate, EnrollmentResponse
 from .auth import get_current_user
 
 router = APIRouter()
+
+class CourseDetailResponse(CourseResponse):
+    """Extended course response with user-specific info"""
+    has_certificate: bool = False
+    certificate_id: Optional[int] = None
+    enrollment_progress: float = 0.0
+    is_enrolled: bool = False
 
 @router.get("/", response_model=List[CourseResponse])
 def get_courses(
@@ -29,7 +38,7 @@ def get_my_courses(
     courses = [enrollment.course for enrollment in enrollments]
     return courses
 
-@router.get("/{course_id}", response_model=CourseResponse)
+@router.get("/{course_id}", response_model=CourseDetailResponse)
 def get_course(
     course_id: int,
     db: Session = Depends(get_db),
@@ -38,7 +47,36 @@ def get_course(
     course = db.query(Course).filter(Course.id == course_id).first()
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
-    return course
+    
+    # Check if user has a certificate for this course
+    certificate = db.query(Certificate).filter(
+        Certificate.user_id == current_user.id,
+        Certificate.course_id == course_id
+    ).first()
+    
+    # Check enrollment status and progress
+    enrollment = db.query(Enrollment).filter(
+        Enrollment.user_id == current_user.id,
+        Enrollment.course_id == course_id
+    ).first()
+    
+    return CourseDetailResponse(
+        id=course.id,
+        title=course.title,
+        description=course.description,
+        category=course.category,
+        level=course.level,
+        duration=course.duration,
+        thumbnail=course.thumbnail,
+        rating=course.rating,
+        instructor_id=course.instructor_id,
+        created_at=course.created_at,
+        updated_at=course.updated_at,
+        has_certificate=certificate is not None,
+        certificate_id=certificate.id if certificate else None,
+        enrollment_progress=enrollment.progress_percentage if enrollment else 0.0,
+        is_enrolled=enrollment is not None
+    )
 
 @router.post("/", response_model=CourseResponse)
 def create_course(

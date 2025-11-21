@@ -25,11 +25,11 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen">
-      <div className="flex items-center justify-center h-16 border-b border-gray-200">
+    <div className="flex flex-col w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
+      <div className="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700">
         <Link href="/dashboard" className="flex items-center space-x-2">
-          <BookOpen className="h-8 w-8 text-blue-600" />
-          <span className="text-xl font-bold text-gray-900">EduPlatform</span>
+          <BookOpen className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+          <span className="text-xl font-bold text-gray-900 dark:text-gray-100">EduPlatform</span>
         </Link>
       </div>
       
@@ -43,8 +43,8 @@ export default function Sidebar() {
               className={cn(
                 'flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors',
                 isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
               )}
             >
               <item.icon className="h-5 w-5" />

@@ -27,3 +27,4 @@ class User(Base):
     submissions = relationship("Submission", back_populates="student")
     progress = relationship("Progress", back_populates="user")
     taught_courses = relationship("Course", back_populates="instructor")
+    certificates = relationship("Certificate", back_populates="user")

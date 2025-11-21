@@ -15,9 +15,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, getUserInitials } from '@/contexts/AuthContext';
+import { useUserStats, useUserCourses } from '@/hooks/useUserData';
 
 export default function ProfilePage() {
   const { user } = useAuth();
+  const { stats } = useUserStats();
+  const { inProgress: inProgressCourses, completed: completedCourses } = useUserCourses();
   
   const profileData = {
     fullName: user?.name || 'Guest User',
@@ -27,49 +30,6 @@ export default function ProfilePage() {
     location: 'New York, USA',
     joinDate: 'January 2024',
     aboutMe: user?.aboutMe || 'No bio added yet. Click Edit Profile to add information about yourself.',
-    stats: {
-      coursesCompleted: 8,
-      coursesInProgress: 4,
-      totalHours: 156,
-      certificatesEarned: 6,
-    },
-    completedCourses: [
-      {
-        id: '1',
-        title: 'Advanced React Development',
-        completedDate: '2024-10-15',
-        certificate: true,
-      },
-      {
-        id: '2',
-        title: 'Python for Data Science',
-        completedDate: '2024-09-20',
-        certificate: true,
-      },
-      {
-        id: '3',
-        title: 'UI/UX Design Fundamentals',
-        completedDate: '2024-08-10',
-        certificate: true,
-      },
-    ],
-    inProgressCourses: [
-      {
-        id: '7',
-        title: 'Phishing and Scam Alert Training - Food Service',
-        progress: 25,
-      },
-      {
-        id: '6',
-        title: 'NIST Cybersecurity Framework 2.0 Training',
-        progress: 15,
-      },
-      {
-        id: '5',
-        title: 'OSHA Restaurant Employee Training - Missouri',
-        progress: 40,
-      },
-    ],
   };
 
   return (
@@ -141,7 +101,7 @@ export default function ProfilePage() {
                   <BookOpen className="h-6 w-6 text-blue-600" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profileData.stats.coursesCompleted}</div>
+                  <div className="text-2xl font-bold text-gray-900">{stats.completed}</div>
                   <div className="text-sm text-gray-600">Completed</div>
                 </div>
               </div>
@@ -151,7 +111,7 @@ export default function ProfilePage() {
                   <GraduationCap className="h-6 w-6 text-purple-600" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profileData.stats.coursesInProgress}</div>
+                  <div className="text-2xl font-bold text-gray-900">{stats.inProgress}</div>
                   <div className="text-sm text-gray-600">In Progress</div>
                 </div>
               </div>
@@ -161,7 +121,7 @@ export default function ProfilePage() {
                   <Clock className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profileData.stats.totalHours}</div>
+                  <div className="text-2xl font-bold text-gray-900">{stats.totalHours}</div>
                   <div className="text-sm text-gray-600">Hours</div>
                 </div>
               </div>
@@ -171,7 +131,7 @@ export default function ProfilePage() {
                   <Award className="h-6 w-6 text-yellow-600" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profileData.stats.certificatesEarned}</div>
+                  <div className="text-2xl font-bold text-gray-900">{stats.certificatesEarned}</div>
                   <div className="text-sm text-gray-600">Certificates</div>
                 </div>
               </div>
@@ -181,7 +141,7 @@ export default function ProfilePage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Courses In Progress</h2>
               <div className="space-y-4">
-                {profileData.inProgressCourses.map((course) => (
+                {inProgressCourses.map((course) => (
                   <Link
                     key={course.id}
                     href={`/courses/${course.id}`}
@@ -206,7 +166,7 @@ export default function ProfilePage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Completed Courses</h2>
               <div className="space-y-3">
-                {profileData.completedCourses.map((course) => (
+                {completedCourses.map((course) => (
                   <div
                     key={course.id}
                     className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"

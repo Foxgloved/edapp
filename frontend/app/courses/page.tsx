@@ -4,6 +4,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { Star, Clock, Users, Search, Filter } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCourses } from '@/hooks/useCourses';
 
 const mockCourses = [
   {
@@ -126,6 +127,19 @@ export default function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All Levels');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  const { courses: allCourses, loading } = useCourses();
+  
+  // Filter courses based on selected criteria
+  const filteredCourses = allCourses.filter(course => {
+    const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
+    const matchesLevel = selectedLevel === 'All Levels' || course.level === selectedLevel;
+    const matchesSearch = searchQuery === '' || 
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesCategory && matchesLevel && matchesSearch;
+  });
 
   return (
     <DashboardLayout>
@@ -182,7 +196,19 @@ export default function CoursesPage() {
 
         {/* Courses Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockCourses.map((course) => (
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+                <div className="h-40 bg-gray-200"></div>
+                <div className="p-6 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))
+          ) : (
+            filteredCourses.map((course) => (
             <Link
               key={course.id}
               href={`/courses/${course.id}`}
@@ -229,17 +255,17 @@ export default function CoursesPage() {
                   </div>
                 </div>
 
-                {course.progress > 0 ? (
+                {(course.progress || 0) > 0 ? (
                   <>
                     <div className="mb-4">
                       <div className="flex items-center justify-between text-sm mb-2">
                         <span className="text-gray-600">Progress</span>
-                        <span className="font-semibold text-blue-600">{course.progress}%</span>
+                        <span className="font-semibold text-blue-600">{course.progress || 0}%</span>
                       </div>
                       <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                           className="absolute top-0 left-0 h-full bg-blue-600 rounded-full"
-                          style={{ width: `${course.progress}%` }}
+                          style={{ width: `${course.progress || 0}%` }}
                         />
                       </div>
                     </div>
@@ -254,7 +280,8 @@ export default function CoursesPage() {
                 )}
               </div>
             </Link>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Browse More Courses */}

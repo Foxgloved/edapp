@@ -3,7 +3,9 @@
 import { useParams } from 'next/navigation';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Star, Clock, Users, PlayCircle, CheckCircle, Lock, BookOpen, Award, Download } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
+import Link from 'next/link';
 
 // Course content database
 const coursesContent: Record<string, any> = {};
@@ -835,10 +837,45 @@ coursesContent['7'] = {
 export default function CourseDetailPage() {
   const params = useParams();
   const [expandedModule, setExpandedModule] = useState<number | null>(1);
+  const [certificate, setCertificate] = useState<any>(null);
+  const [isGeneratingCert, setIsGeneratingCert] = useState(false);
+  const [courseProgress, setCourseProgress] = useState(0);
 
   // Get course by ID from URL params
   const courseId = params.id as string;
   const course = coursesContent[courseId];
+
+  useEffect(() => {
+    // Check if certificate exists for this course
+    checkForCertificate();
+    // In a real app, you would also fetch the actual course progress from the backend
+    // For now, we'll simulate 100% completion for demonstration
+    // setCourseProgress(100);
+  }, [courseId]);
+
+  const checkForCertificate = async () => {
+    try {
+      const cert = await api.getCertificateByCourse(courseId);
+      setCertificate(cert);
+    } catch (err) {
+      // Certificate doesn't exist yet, which is fine
+      console.log('No certificate found for this course');
+    }
+  };
+
+  const handleGenerateCertificate = async () => {
+    try {
+      setIsGeneratingCert(true);
+      const newCert = await api.generateCertificate(courseId);
+      setCertificate(newCert);
+      alert('Certificate generated successfully!');
+    } catch (err: any) {
+      console.error('Error generating certificate:', err);
+      alert(err.message || 'Failed to generate certificate. Please ensure you have completed the course.');
+    } finally {
+      setIsGeneratingCert(false);
+    }
+  };
 
   // If course not found, show error
   if (!course) {
@@ -996,6 +1033,65 @@ export default function CourseDetailPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Certificate Status */}
+              {certificate && (
+                <div className="mt-8 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <Award className="h-8 w-8 text-blue-600 flex-shrink-0" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          🎉 Certificate Earned!
+                        </h3>
+                        <p className="text-gray-700 mb-3">
+                          Congratulations! You've successfully completed this course and earned your certificate.
+                        </p>
+                        <div className="flex gap-3">
+                          <Link
+                            href={`/certificates/${certificate.id}`}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                          >
+                            <Award className="h-4 w-4" />
+                            View Certificate
+                          </Link>
+                          <Link
+                            href="/certificates"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold"
+                          >
+                            View All Certificates
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Generate Certificate Button (shown when course is completed but no certificate yet) */}
+              {!certificate && courseProgress >= 100 && (
+                <div className="mt-8 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-lg p-6">
+                  <div className="flex items-start gap-4">
+                    <Award className="h-8 w-8 text-yellow-600 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Ready to Claim Your Certificate!
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        Congratulations on completing the course! Click below to generate your official certificate.
+                      </p>
+                      <button
+                        onClick={handleGenerateCertificate}
+                        disabled={isGeneratingCert}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Award className="h-5 w-5" />
+                        {isGeneratingCert ? 'Generating...' : 'Generate Certificate'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Certification Info */}
               <div className="mt-8 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg p-6">

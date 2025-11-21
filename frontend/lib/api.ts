@@ -1,62 +1,172 @@
-import axios from 'axios';
+// API client for backend communication
+// Base URL from environment or default to localhost
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+class APIClient {
+  private baseUrl: string;
 
-// Add request interceptor for auth token
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  constructor(baseUrl: string = API_BASE_URL) {
+    this.baseUrl = baseUrl;
   }
-  return config;
-});
 
-export default api;
+  async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    
+    const config: RequestInit = {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    };
 
-// API Functions
-export const authAPI = {
-  login: (email: string, password: string) => 
-    api.post('/auth/login', { email, password }),
-  register: (data: { email: string; password: string; name: string }) => 
-    api.post('/auth/register', data),
-  logout: () => api.post('/auth/logout'),
-};
+    // Add auth token if exists
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
 
-export const coursesAPI = {
-  getAll: () => api.get('/courses'),
-  getById: (id: string) => api.get(`/courses/${id}`),
-  enroll: (courseId: string) => api.post(`/courses/${courseId}/enroll`),
-  getMyCourses: () => api.get('/courses/my-courses'),
-};
+    const response = await fetch(url, config);
 
-export const progressAPI = {
-  getProgress: (courseId: string) => api.get(`/progress/${courseId}`),
-  updateProgress: (courseId: string, lessonId: string) => 
-    api.post(`/progress/${courseId}`, { lessonId }),
-};
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`);
+    }
 
-export const scheduleAPI = {
-  getMySchedule: () => api.get('/schedule'),
-  getUpcoming: () => api.get('/schedule/upcoming'),
-};
+    return response.json();
+  }
 
-export const assignmentAPI = {
-  getAll: () => api.get('/assignments'),
-  getById: (id: string) => api.get(`/assignments/${id}`),
-  submit: (id: string, data: FormData) => 
-    api.post(`/assignments/${id}/submit`, data, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    }),
-};
+  // Auth endpoints
+  async login(email: string, password: string) {
+    return this.request('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  }
 
-export const leaderboardAPI = {
-  getGlobal: () => api.get('/leaderboard'),
-  getByCourse: (courseId: string) => api.get(`/leaderboard/${courseId}`),
-};
+  async logout() {
+    return this.request('/api/auth/logout', {
+      method: 'POST',
+    });
+  }
+
+  async getCurrentUser() {
+    return this.request('/api/auth/me');
+  }
+
+  // Courses endpoints
+  async getCourses(params?: { category?: string; level?: string; search?: string }) {
+    const queryString = new URLSearchParams(params as any).toString();
+    return this.request(`/api/courses${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getCourse(id: string) {
+    return this.request(`/api/courses/${id}`);
+  }
+
+  async enrollInCourse(courseId: string) {
+    return this.request(`/api/courses/${courseId}/enroll`, {
+      method: 'POST',
+    });
+  }
+
+  async getCourseProgress(courseId: string) {
+    return this.request(`/api/courses/${courseId}/progress`);
+  }
+
+  // User endpoints
+  async updateProfile(data: any) {
+    return this.request('/api/users/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    return this.request('/api/users/me/password', {
+      method: 'PUT',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  }
+
+  async deleteAccount() {
+    return this.request('/api/users/me', {
+      method: 'DELETE',
+    });
+  }
+
+  // Enrollments
+  async getMyEnrollments() {
+    return this.request('/api/enrollments/me');
+  }
+
+  // Progress
+  async updateProgress(courseId: string, lessonId: string, data: any) {
+    return this.request(`/api/progress/${courseId}/lessons/${lessonId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Notifications
+  async getNotifications() {
+    return this.request('/api/notifications');
+  }
+
+  async markNotificationAsRead(id: string) {
+    return this.request(`/api/notifications/${id}/read`, {
+      method: 'PUT',
+    });
+  }
+
+  async markAllNotificationsAsRead() {
+    return this.request('/api/notifications/read-all', {
+      method: 'PUT',
+    });
+  }
+
+  // Certificates
+  async getCertificates() {
+    return this.request('/api/certificates');
+  }
+
+  async getCertificate(certificateId: string) {
+    return this.request(`/api/certificates/${certificateId}`);
+  }
+
+  async generateCertificate(courseId: string) {
+    return this.request(`/api/certificates/generate/${courseId}`, {
+      method: 'POST',
+    });
+  }
+
+  async getCertificateByCourse(courseId: string) {
+    return this.request(`/api/certificates/course/${courseId}`);
+  }
+
+  async verifyCertificate(certificateNumber: string) {
+    return this.request(`/api/certificates/verify/${certificateNumber}`);
+  }
+
+  // Leaderboard
+  async getLeaderboard() {
+    return this.request('/api/leaderboard');
+  }
+
+  // Achievements
+  async getAchievements() {
+    return this.request('/api/achievements');
+  }
+}
+
+// Export singleton instance
+export const api = new APIClient();
+
+// Export class for testing
+export { APIClient };
