@@ -7,30 +7,40 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
     "snyk:test": "snyk test",
     "snyk:monitor": "snyk monitor",
     "snyk:protect": "snyk protect"
   },
   "dependencies": {
+    "axios": "^1.6.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^2.30.0",
+    "lucide-react": "^0.400.0",
+    "next": "^15.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "next": "^15.0.0",
-    "axios": "^1.6.0",
     "recharts": "^2.10.0",
-    "lucide-react": "^0.400.0",
-    "date-fns": "^2.30.0",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
     "autoprefixer": "^10.4.16",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "^15.0.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
-    "eslint": "^8.54.0",
-    "eslint-config-next": "^15.0.0"
+    "typescript": "^5.3.3"
   }
 }
