@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
   return (
     <DashboardLayout>
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-8 max-w-6xl mx-auto" key={`profile-${user?.id || 'guest'}`}>
         {/* Header Section */}
         <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl shadow-lg overflow-hidden mb-8">
           <div className="p-8">
