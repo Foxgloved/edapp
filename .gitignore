@@ -53,6 +53,12 @@ coverage/
 .nyc_output/
 backend/.pytest_cache/
 
+# Cypress
+frontend/cypress/videos/
+frontend/cypress/screenshots/
+frontend/cypress/downloads/
+frontend/cypress.env.json
+
 # Build outputs
 dist/
 build/
