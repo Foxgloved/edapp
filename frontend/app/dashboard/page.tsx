@@ -71,10 +71,20 @@ const learningFeatures = [
 export default function DashboardPage() {
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [welcomeName, setWelcomeName] = useState('there');
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const firstName = user.name.split(' ')[0];
+      setWelcomeName(firstName);
+    } else {
+      setWelcomeName('there');
+    }
+  }, [user]);
 
   if (!mounted) {
     return (
@@ -98,15 +108,13 @@ export default function DashboardPage() {
     );
   }
 
-  const firstName = user?.name.split(' ')[0] || 'there';
-
   return (
     <DashboardLayout>
       <div className="p-8" key={`dashboard-${user?.id || 'guest'}`}>
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {firstName}! 👋
+            Welcome back, {welcomeName}! 👋
           </h1>
           <p className="text-gray-600">
             You&apos;re making great progress. Keep up the excellent work!

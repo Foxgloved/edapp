@@ -1,12 +1,28 @@
 'use client';
 
 import { Search, Bell, LogOut, User, Settings, ChevronDown, Award, BookOpen, CheckCircle, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth, getUserInitials } from '@/contexts/AuthContext';
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const [displayName, setDisplayName] = useState(user?.name || 'Guest');
+  const [displayRole, setDisplayRole] = useState(user?.role || 'User');
+  const [displayInitials, setDisplayInitials] = useState(user ? getUserInitials(user.name) : 'U');
+
+  // Update display values when user changes
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.name);
+      setDisplayRole(user.role);
+      setDisplayInitials(getUserInitials(user.name));
+    } else {
+      setDisplayName('Guest');
+      setDisplayRole('User');
+      setDisplayInitials('U');
+    }
+  }, [user]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notificationsList, setNotificationsList] = useState([
@@ -179,11 +195,11 @@ export default function Header() {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                  {user ? getUserInitials(user.name) : 'U'}
+                  {displayInitials}
                 </div>
                 <div className="hidden md:block">
-                  <div className="text-sm font-semibold text-gray-900">{user?.name || 'Guest'}</div>
-                  <div className="text-xs text-gray-500 capitalize">{user?.role || 'User'}</div>
+                  <div className="text-sm font-semibold text-gray-900">{displayName}</div>
+                  <div className="text-xs text-gray-500 capitalize">{displayRole}</div>
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-500" />
               </button>

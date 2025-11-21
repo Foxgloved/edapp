@@ -48,9 +48,14 @@ export default function UserSwitcher() {
       email: demoUser.email,
       role: demoUser.role,
     };
-    loginAsUser(user);
     setIsOpen(false);
-    router.push('/dashboard');
+    loginAsUser(user);
+    
+    // Force page refresh to update UI
+    setTimeout(() => {
+      router.push('/dashboard');
+      router.refresh();
+    }, 100);
   };
 
   return (
