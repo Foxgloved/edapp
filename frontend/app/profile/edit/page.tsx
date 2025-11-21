@@ -6,7 +6,8 @@ import {
   Lock,
   Trash2,
   CheckCircle,
-  X
+  X,
+  Save
 } from 'lucide-react';
 
 export default function EditProfilePage() {
