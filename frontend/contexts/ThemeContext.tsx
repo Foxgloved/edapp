@@ -19,17 +19,38 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('Light');
   const [language, setLanguageState] = useState<Language>('English');
   const [effectiveTheme, setEffectiveTheme] = useState<'Light' | 'Dark'>('Light');
+  const [mounted, setMounted] = useState(false);
 
-  // Load saved preferences from localStorage on mount
+  // Load saved preferences from localStorage on mount (non-blocking)
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    const savedLanguage = localStorage.getItem('language') as Language;
+    setMounted(true);
     
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    }
-    if (savedLanguage) {
-      setLanguageState(savedLanguage);
+    // Non-blocking localStorage read
+    const loadPreferences = () => {
+      try {
+        const savedTheme = localStorage.getItem('theme') as Theme;
+        const savedLanguage = localStorage.getItem('language') as Language;
+        
+        if (savedTheme) {
+          setThemeState(savedTheme);
+        } else {
+          setThemeState('Light');
+        }
+        if (savedLanguage) {
+          setLanguageState(savedLanguage);
+        }
+      } catch (e) {
+        // Fallback to defaults on error
+        setThemeState('Light');
+        setLanguageState('English');
+      }
+    };
+
+    // Defer to next tick to avoid blocking render
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(loadPreferences, { timeout: 50 });
+    } else {
+      setTimeout(loadPreferences, 0);
     }
   }, []);
 

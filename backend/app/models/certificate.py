@@ -21,3 +21,6 @@ class Certificate(Base):
     user = relationship("User", back_populates="certificates")
     course = relationship("Course", back_populates="certificates")
 
+
+
+

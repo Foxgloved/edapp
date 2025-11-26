@@ -39,7 +39,7 @@ export default function CertificateViewPage() {
   const loadCertificate = async () => {
     try {
       setLoading(true);
-      const data = await api.getCertificate(certificateId);
+      const data = await api.getCertificate(certificateId) as CertificateData;
       setCertificate(data);
     } catch (err) {
       console.error('Error loading certificate:', err);

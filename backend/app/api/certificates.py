@@ -189,3 +189,6 @@ def verify_certificate(
     
     return cert_detail
 
+
+
+

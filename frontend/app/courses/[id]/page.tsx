@@ -893,8 +893,8 @@ export default function CourseDetailPage() {
     setExpandedModule(expandedModule === moduleId ? null : moduleId);
   };
 
-  const totalLessons = course.modules.reduce((sum, module) => sum + module.lessonsCount, 0);
-  const totalDuration = course.modules.reduce((sum, module) => sum + module.duration, 0);
+  const totalLessons = course.modules.reduce((sum: number, module: any) => sum + module.lessonsCount, 0);
+  const totalDuration = course.modules.reduce((sum: number, module: any) => sum + module.duration, 0);
 
   return (
     <DashboardLayout>
@@ -970,7 +970,7 @@ export default function CourseDetailPage() {
 
               {/* Modules */}
               <div className="space-y-4">
-                {course.modules.map((module) => (
+                {course.modules.map((module: any) => (
                   <div
                     key={module.id}
                     className="bg-white rounded-lg border border-gray-200 overflow-hidden"
@@ -1001,7 +1001,7 @@ export default function CourseDetailPage() {
                     {/* Module Lessons */}
                     {expandedModule === module.id && (
                       <div className="border-t border-gray-200">
-                        {module.lessons.map((lesson, index) => (
+                        {module.lessons.map((lesson: any, index: number) => (
                           <div
                             key={lesson.id}
                             className={`px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors ${

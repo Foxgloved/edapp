@@ -1,6 +1,4 @@
 'use client';
-
-import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { 
   TrendingUp, 
@@ -40,47 +38,11 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { stats } = useUserStats();
   const { inProgress: enrolledCourses } = useUserCourses();
-  const [mounted, setMounted] = useState(false);
-  const [welcomeName, setWelcomeName] = useState('there');
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      const firstName = user.name.split(' ')[0];
-      setWelcomeName(firstName);
-    } else {
-      setWelcomeName('there');
-    }
-  }, [user]);
-
-  if (!mounted) {
-    return (
-      <DashboardLayout>
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome back!
-            </h1>
-            <p className="text-gray-600">
-              You&apos;re making great progress. Keep up the excellent work!
-            </p>
-          </div>
-          <div className="animate-pulse space-y-4">
-            <div className="h-40 bg-gray-200 rounded-2xl"></div>
-            <div className="h-40 bg-gray-200 rounded-2xl"></div>
-            <div className="h-40 bg-gray-200 rounded-2xl"></div>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
+  const welcomeName = user ? user.name.split(' ')[0] : 'there';
 
   return (
     <DashboardLayout>
-      <div className="p-8" key={`dashboard-${user?.id || 'guest'}`}>
+      <div className="p-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -377,7 +339,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <p className="text-center text-sm text-gray-600">
-                Great job! You're more active than last month.
+                Great job! You&apos;re more active than last month.
               </p>
             </div>
 

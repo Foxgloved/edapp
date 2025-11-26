@@ -49,7 +49,7 @@ export default function Certificate({
       });
 
       // Convert to blob and download
-      canvas.toBlob((blob) => {
+      canvas.toBlob((blob: Blob | null) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');

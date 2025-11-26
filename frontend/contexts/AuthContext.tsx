@@ -54,19 +54,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // Load user from localStorage on mount
+  // Load user from localStorage on mount (non-blocking)
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
+    // Use requestIdleCallback for non-critical localStorage read
+    const loadUser = () => {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        }
       } catch (error) {
         console.error('Failed to parse stored user:', error);
         localStorage.removeItem('currentUser');
+      } finally {
+        setIsLoading(false);
       }
+    };
+
+    // Use requestIdleCallback if available, otherwise setTimeout for non-blocking
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(loadUser, { timeout: 100 });
+    } else {
+      setTimeout(loadUser, 0);
     }
-    setIsLoading(false);
   }, []);
 
   // Save user to localStorage whenever it changes

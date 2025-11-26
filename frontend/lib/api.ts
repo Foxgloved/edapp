@@ -24,8 +24,13 @@ class APIClient {
       },
     };
 
-    // Add auth token if exists
-    const token = localStorage.getItem('authToken');
+    // Add auth token if exists (non-blocking)
+    let token: string | null = null;
+    try {
+      token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    } catch (e) {
+      // localStorage may not be available
+    }
     if (token) {
       config.headers = {
         ...config.headers,
@@ -36,6 +41,10 @@ class APIClient {
     const response = await fetch(url, config);
 
     if (!response.ok) {
+      // Don't throw for 404s - these are expected for missing resources
+      if (response.status === 404) {
+        throw new Error('NOT_FOUND');
+      }
       throw new Error(`API Error: ${response.statusText}`);
     }
 
@@ -103,7 +112,16 @@ class APIClient {
 
   // Enrollments
   async getMyEnrollments() {
-    return this.request('/api/enrollments/me');
+    // Use my-courses endpoint which returns enrolled courses
+    try {
+      return await this.request('/api/courses/my-courses');
+    } catch (err: any) {
+      // If endpoint doesn't exist or requires auth, return empty array
+      if (err?.message === 'NOT_FOUND') {
+        return [];
+      }
+      throw err;
+    }
   }
 
   // Progress

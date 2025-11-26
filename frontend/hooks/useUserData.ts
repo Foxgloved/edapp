@@ -101,25 +101,46 @@ export function useUserStats() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchStats() {
-      if (!isAuthenticated || !user) {
-        setStats(DEMO_USER_DATA.stats);
-        return;
-      }
+    if (!isAuthenticated || !user) {
+      setStats(DEMO_USER_DATA.stats);
+      return;
+    }
 
+    // Defer API call to avoid blocking initial render
+    let cancelled = false;
+    
+    const fetchStats = async () => {
       setLoading(true);
       try {
         const data = await api.request<UserStats>('/api/users/me/stats');
-        setStats(data);
-      } catch (err) {
-        console.warn('Using demo stats');
-        setStats(DEMO_USER_DATA.stats);
+        if (!cancelled) {
+          setStats(data);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          // Silently use demo data if endpoint doesn't exist (404) or other error
+          if (err?.message !== 'NOT_FOUND') {
+            console.warn('Using demo stats:', err?.message || 'API unavailable');
+          }
+          setStats(DEMO_USER_DATA.stats);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
+    };
+
+    // Use requestIdleCallback for non-blocking fetch
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(fetchStats, { timeout: 200 });
+    } else {
+      setTimeout(fetchStats, 0);
     }
 
-    fetchStats();
+    return () => {
+      cancelled = true;
+    };
   }, [user, isAuthenticated]);
 
   return { stats, loading };
@@ -132,32 +153,53 @@ export function useUserCourses() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchCourses() {
-      if (!isAuthenticated || !user) {
-        setInProgress(DEMO_USER_DATA.inProgressCourses);
-        setCompleted(DEMO_USER_DATA.completedCourses);
-        return;
-      }
+    if (!isAuthenticated || !user) {
+      setInProgress(DEMO_USER_DATA.inProgressCourses);
+      setCompleted(DEMO_USER_DATA.completedCourses);
+      return;
+    }
 
+    // Defer API call to avoid blocking initial render
+    let cancelled = false;
+    
+    const fetchCourses = async () => {
       setLoading(true);
       try {
         const enrollments = await api.getMyEnrollments() as any[];
         
-        const inProgressCourses = enrollments.filter((e: any) => !e.completed_at) as EnrolledCourse[];
-        const completedCourses = enrollments.filter((e: any) => e.completed_at) as CompletedCourse[];
-        
-        setInProgress(inProgressCourses);
-        setCompleted(completedCourses);
-      } catch (err) {
-        console.warn('Using demo courses');
-        setInProgress(DEMO_USER_DATA.inProgressCourses);
-        setCompleted(DEMO_USER_DATA.completedCourses);
+        if (!cancelled) {
+          const inProgressCourses = enrollments.filter((e: any) => !e.completed_at) as EnrolledCourse[];
+          const completedCourses = enrollments.filter((e: any) => e.completed_at) as CompletedCourse[];
+          
+          setInProgress(inProgressCourses);
+          setCompleted(completedCourses);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          // Silently use demo data if endpoint doesn't exist (404) or other error
+          if (err?.message !== 'NOT_FOUND') {
+            console.warn('Using demo courses:', err?.message || 'API unavailable');
+          }
+          setInProgress(DEMO_USER_DATA.inProgressCourses);
+          setCompleted(DEMO_USER_DATA.completedCourses);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
+    };
+
+    // Use requestIdleCallback for non-blocking fetch
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(fetchCourses, { timeout: 200 });
+    } else {
+      setTimeout(fetchCourses, 0);
     }
 
-    fetchCourses();
+    return () => {
+      cancelled = true;
+    };
   }, [user, isAuthenticated]);
 
   return { inProgress, completed, loading };

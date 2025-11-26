@@ -20,7 +20,7 @@ export default function Home() {
               <Link href="/login" className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium">
                 Login
               </Link>
-              <Link href="/dashboard" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <Link href="/login" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Get Started
               </Link>
             </div>
@@ -40,7 +40,7 @@ export default function Home() {
             track progress, and foster professional development within your organization.
           </p>
           <div className="flex justify-center space-x-4">
-            <Link href="/dashboard" className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold">
+            <Link href="/login" className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold">
               Start Learning
             </Link>
             <button className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-lg font-semibold">

@@ -34,3 +34,6 @@ class CertificateDetail(CertificateResponse):
     course_category: Optional[str] = None
     course_duration: Optional[int] = None
 
+
+
+
